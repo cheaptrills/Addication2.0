@@ -2,6 +2,7 @@ const express = require("express");
 const dotenv = require('dotenv');
 const bodyParser = require('body-parser');
 const { join } = require("path");
+const http = require("http");
 
 const ApiRouter = require("./routes/api");
 dotenv.config();
@@ -16,4 +17,8 @@ app.use((_, res) => {
     res.sendFile(join(__dirname, "build", "index.html"));
 });
 
-app.listen(port, () => console.log(`Server lisiting on port ${port}`));
+let server = http.createServer(app);
+require("./primus/primus").go(server);
+server.listen(port);
+
+//app.listen(port, () => console.log(`Server lisiting on port ${port}`));
